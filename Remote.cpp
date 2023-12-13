@@ -281,7 +281,9 @@ bool InstallAndStartRemoteService(LPCWSTR remoteServer, Settings& settings)
 	if((FALSE == settings.user.IsEmpty()) && ((false == settings.bNeedToDetachFromIPC) || (INVALID_HANDLE_VALUE == settings.hUserImpersonated)) )
 		EstablishConnection(settings, remoteServer, L"IPC$", true);
 
-	if(NULL != settings.hUserImpersonated)
+	Log(StrFormat(L"settings.hUserImpersonated %p", settings.hUserImpersonated), 0ul);
+
+	if(NULL != settings.hUserImpersonated && INVALID_HANDLE_VALUE != settings.hUserImpersonated)
 		ImpersonateLoggedOnUser(settings.hUserImpersonated);
 
 	SC_HANDLE hSCM = ::OpenSCManager(remoteServer, NULL, SC_MANAGER_ALL_ACCESS);
@@ -326,6 +328,7 @@ bool InstallAndStartRemoteService(LPCWSTR remoteServer, Settings& settings)
 			svcExePath += remoteServiceName + L".exe";
 		}
 		svcExePath += L" -service"; //so it knows it is the service when it starts
+		Log(StrFormat(L"Creating service at %s", svcExePath), gle);
 
 		hService = ::CreateService(
 						hSCM, remoteServiceName, remoteServiceName,

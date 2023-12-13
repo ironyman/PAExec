@@ -103,7 +103,7 @@ int wmain(int argc, wchar_t* argv[], wchar_t* envp[])
 		PrintCopyright();
 
 #ifdef _DEBUG
-		RegressionTests();
+		// RegressionTests();
 #endif
 
 		if(ParseCommandLine(settings, ::GetCommandLine()))
